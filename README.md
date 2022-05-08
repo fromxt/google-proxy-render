@@ -9,8 +9,8 @@ This repo is a simple example used as a starting point to deploy go web on [Rend
 
 3. Select **GO** for the environment and use the following values during creation:
 
-   > Build Command    `go build -tags netgo -ldflags '-s -w' -o app`
+   > Build Command          **`go build -tags netgo -ldflags '-s -w' -o app`**
  
-   > Start Command    `./app`
+   > Start Command          **`./app`**
    
  4. Your app will be live on your Render URL as soon as the build  finishes.
