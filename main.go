@@ -3,6 +3,7 @@ package main
 import (
     "github.com/AaronO/gogo-proxy"
     "net/http"
+    "os"
 )
 
 func main() {
