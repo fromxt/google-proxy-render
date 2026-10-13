@@ -14,10 +14,8 @@ func main() {
 		},
 	})
 
-	// 
 	proxyPassword := os.Getenv("PROXY_PASSWORD")
 
-	// 
 	authHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// 
 		if proxyPassword == "" {
@@ -26,16 +24,13 @@ func main() {
 		}
 
 		// 
-		clientPwd := r.URL.Query().Get("pwd")
-		
-		// 
-		if clientPwd == "" {
-			clientPwd = r.Header.Get("X-Proxy-Password")
-		}
+		_, pass, ok := r.BasicAuth()
 
 		// 
-		if subtle.ConstantTimeCompare([]byte(clientPwd), []byte(proxyPassword)) != 1 {
-			http.Error(w, "Unauthorized: Incorrect or missing password", http.StatusUnauthorized)
+		if !ok || subtle.ConstantTimeCompare([]byte(pass), []byte(proxyPassword)) != 1 {
+			// 
+			w.Header().Set("WWW-Authenticate", `Basic realm="Google Proxy Restricted Access"`)
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
 
@@ -43,6 +38,5 @@ func main() {
 		p.ServeHTTP(w, r)
 	})
 
-	// 
 	http.ListenAndServe(":"+os.Getenv("PORT"), authHandler)
 }
